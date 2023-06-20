@@ -19,7 +19,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         element.myId = dataUser._id;
       });
       setCards(dataCard)
-    });
+    })
+    .catch(error => console.error(`Ошибка ${error}`))
   }, [])
 
 
