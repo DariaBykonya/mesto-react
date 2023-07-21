@@ -26,10 +26,15 @@
   background-size: 26px 26px;
   border-radius: 50%;
   opacity: 0;
+
 }
 
 .profile__avatar-add:hover::before {
   opacity: 1;
   transition: opacity 0.5s linear;
   cursor: pointer;
+}
+
+.profile__avatar-add:focus {
+  outline: none;
 }

@@ -1,30 +1,12 @@
-import { useEffect, useState } from "react";
-import api from "../utils/Api.js";
+import { useContext } from "react";
 import Card from "./Card.jsx";
+import currentUserContext from "../contexts/CurrentUserContext.js";
+import RenderLoading from "./RenderLoading/RenderLoading.jsx";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onDelete, cards, isLoading, onCardLike }) {
 
-  const [userName, setuserName] = useState('')
-  const [userDescription, setuserDescription] = useState('')
-  const [userAvatar, setuserAvatar] = useState('')
-  const [cards, setCards] = useState([])
+  const currentUser = useContext(currentUserContext)
 
-  useEffect(() => {
-    Promise.all([api.getInfo(), api.getCards()])
-    .then(([dataUser, dataCard]) => {
-      setuserName(dataUser.name)
-      setuserDescription(dataUser.about)
-      setuserAvatar(dataUser.avatar)
-      dataCard.forEach(element => {
-        element.myId = dataUser._id;
-      });
-      setCards(dataCard)
-    })
-    .catch(error => console.error(`Ошибка ${error}`))
-  }, [])
-
-
-    
     return (
         <main>
         <section className="page-content profile">
@@ -32,32 +14,31 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             <button type="button" className="profile__avatar-add" onClick={onEditAvatar}>
               <div className="profile__image" 
               style={{ 
-                backgroundImage: `url(${userAvatar})`, 
+                backgroundImage: `url(${currentUser.avatar ? currentUser.avatar : '#'})`, 
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 width: '100%',
                 height: '100%' }}/>
             </button>
-            <div className="profile__info">
+            <div className="profideleteCardle__info">
               <div className="profile__name-edit">
-                <h1 className="profile__name">{userName}</h1>
+                <h1 className="profile__name">{currentUser.name ? currentUser.name : ''}</h1>
                 <button className="button profile__edit-button" type="button" onClick={onEditProfile}/>
               </div>
-              <p className="profile__text">{userDescription}</p>
+              <p className="profile__text">{currentUser.about ? currentUser.about : ''}</p>
             </div>
           </div>
           <button className="button profile__add-button" type="button" onClick={onAddPlace}/>
         </section>
         <section className="page-content elements">
-         {cards.map(data => {
+         {isLoading ? <RenderLoading/> : cards.map(data => {
           return (
             <div id="cardTemplate" key={data._id}>
 
-          <Card card={data} onCardClick = {onCardClick} />
+          <Card card={data} onCardClick = {onCardClick} onDelete = {onDelete} onCardLike={onCardLike} />
           </div>)
           })}
-         
         </section>
       </main>
   )};
