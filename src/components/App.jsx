@@ -36,7 +36,7 @@ function handleAddPlaceClick() {
 
 
 // стейты для крточек
-const [selectedCard, setSelectedCard] = useState([])
+const [selectedCard, setSelectedCard] = useState(null)
 const [isImagePopupOpen, setImagePopupOpen] = useState(false)
 
 const [deleteCardId, setDeleteCardId] = useState('')
@@ -105,11 +105,8 @@ function handleUpdateUser(data) {
       (data) => {
         setCurrentUser(data);
         closeAllPopups();
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
+      })
+    .catch(error => console.error(`Ошибка ${error}`))
     .finally(() => {
       setIsLoading(false)
     })
@@ -122,29 +119,23 @@ function handleUpdateAvatar(data) {
     (data) => {
       setCurrentUser(data)
       closeAllPopups()
-    },
-    (err) => {
-      console.log(err);
-    }
-  )
+    })
+  .catch(error => console.error(`Ошибка ${error}`))
   .finally(() => {
     setIsLoading(false)
   })
 }
 
 function handleAddPlaceSubmit(data) {
-  closeAllPopups()
   setIsLoading(true);
   api.addCard(data)
   .then(
     (newCard) => {
       setCards([newCard, ...cards]);
-    },
-    (err) => {
-      console.log(err);
-    }
-  )
-  .finally(() => {
+      closeAllPopups()
+    })
+    .catch(error => console.error(`Ошибка ${error}`))
+    .finally(() => {
     setIsLoading(false)
   })
 
@@ -152,15 +143,14 @@ function handleAddPlaceSubmit(data) {
 
 function handleCardDelete(evt) {
  evt.preventDefault()
- closeAllPopups()
  setIsLoading(true);
  api.deleteCard(deleteCardId)
  .then (() => {
   api.getCards()
   .then((dataCards) => {
     setCards(dataCards)
+    closeAllPopups()
   })
-
 })
  .catch(error => console.error(`Ошибка ${error}`))
  .finally(() => {
@@ -176,12 +166,10 @@ function handleCardLike(card) {
       (newCard) => {
         const newCards = cards.map((currentCard) => currentCard._id === card._id ? newCard : currentCard)
         setCards(newCards);
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
-}
+      })
+      .catch(error => console.error(`Ошибка ${error}`))
+
+    }
 
 
 return (
