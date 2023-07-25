@@ -99,7 +99,6 @@ useEffect(() => {
 }, [])
 
 function handleUpdateUser(data) {
-  setIsLoading(true);
   api.patchUserInfo(data)
     .then(
       (data) => {
@@ -107,13 +106,9 @@ function handleUpdateUser(data) {
         closeAllPopups();
       })
     .catch(error => console.error(`Ошибка ${error}`))
-    .finally(() => {
-      setIsLoading(false)
-    })
 }
 
 function handleUpdateAvatar(data) {
-  setIsLoading(true);
   api.patchAddAvatar(data)
   .then(
     (data) => {
@@ -121,13 +116,9 @@ function handleUpdateAvatar(data) {
       closeAllPopups()
     })
   .catch(error => console.error(`Ошибка ${error}`))
-  .finally(() => {
-    setIsLoading(false)
-  })
 }
 
 function handleAddPlaceSubmit(data) {
-  setIsLoading(true);
   api.addCard(data)
   .then(
     (newCard) => {
@@ -135,15 +126,10 @@ function handleAddPlaceSubmit(data) {
       closeAllPopups()
     })
     .catch(error => console.error(`Ошибка ${error}`))
-    .finally(() => {
-    setIsLoading(false)
-  })
-
 }
 
 function handleCardDelete(evt) {
  evt.preventDefault()
- setIsLoading(true);
  api.deleteCard(deleteCardId)
  .then (() => {
   api.getCards()
@@ -153,10 +139,6 @@ function handleCardDelete(evt) {
   })
 })
  .catch(error => console.error(`Ошибка ${error}`))
- .finally(() => {
-  setIsLoading(false)
- })
-
 }
 
 function handleCardLike(card) {
